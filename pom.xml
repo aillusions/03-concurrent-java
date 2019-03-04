@@ -11,6 +11,7 @@
     <modules>
         <module>cj-parallel-stream</module>
         <module>cj-reactor</module>
+        <module>cj-future</module>
     </modules>
 
 </project>
