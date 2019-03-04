@@ -18,27 +18,30 @@ public class CjParallelStreamApplicationTests {
     @Test
     public void contextLoads() throws ExecutionException, InterruptedException, IOException {
 
+        long processingTime8Threads = processAndGetTime(8);
+        System.out.println("Processed by: " + 8 + " threads  in " + processingTime8Threads + " ms.");
+    }
+
+    public long processAndGetTime(int threads) throws ExecutionException, InterruptedException {
         AtomicInteger counter = new AtomicInteger();
 
         IntStream basicStream = IntStream.range(0, 100_000_000);
+
+        IntStream parallelStream = basicStream.parallel();
+        ForkJoinPool customThreadPool = new ForkJoinPool(threads);
+
         long start = System.currentTimeMillis();
+        customThreadPool.submit(
+                () -> parallelStream.forEach(idx -> {
 
-        try (IntStream parallelStream = basicStream.parallel()) {
+                    int curr = counter.incrementAndGet();
 
-            ForkJoinPool customThreadPool = new ForkJoinPool(8);
+                    if (curr % 100_000 == 0) {
+                        System.out.println(Thread.currentThread().getName() + " found: " + curr + " with indx: " + idx);
+                    }
 
-            customThreadPool.submit(
-                    () -> parallelStream.forEach(idx -> {
+                })).get();
 
-                        int curr = counter.incrementAndGet();
-
-                        if (curr % 100_000 == 0) {
-                            System.out.println(Thread.currentThread().getName() + " found: " + curr + " with indx: " + idx);
-                        }
-
-                    })).get();
-        }
-
-        System.out.println("Found total: " + counter + " in " + (System.currentTimeMillis() - start) + " ms.");
+        return (System.currentTimeMillis() - start);
     }
 }
