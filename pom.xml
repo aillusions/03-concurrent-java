@@ -9,6 +9,7 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>cj-parallel-stream</module>
         <module>cj-reactor</module>
     </modules>
 
