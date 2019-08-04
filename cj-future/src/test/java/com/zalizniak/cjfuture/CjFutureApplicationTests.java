@@ -39,11 +39,11 @@ public class CjFutureApplicationTests {
 
 		log.info("contextLoads1() running in thread: " + Thread.currentThread().getName());
 
-		CountDownLatch thenApplyAsyncstartedLatch = new CountDownLatch(1);
+		CountDownLatch thenApplyAsyncStartedLatch = new CountDownLatch(1);
 
 		asyncConf.sayHello().thenApplyAsync(s -> {
 			log.info("thenApplyAsync() running in thread: " + Thread.currentThread().getName());
-			thenApplyAsyncstartedLatch.countDown();
+			thenApplyAsyncStartedLatch.countDown();
 
 			// Thread will be terminated - and message should not appear in log
 			try {
@@ -56,6 +56,6 @@ public class CjFutureApplicationTests {
 			return s;
 		});
 
-		thenApplyAsyncstartedLatch.await();
+		thenApplyAsyncStartedLatch.await();
 	}
 }
