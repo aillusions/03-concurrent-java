@@ -12,6 +12,8 @@
         <module>cj-parallel-stream</module>
         <module>cj-reactor</module>
         <module>cj-future</module>
+        <module>cj-rxjava</module>
+        <module>cj-akka</module>
     </modules>
 
 </project>
