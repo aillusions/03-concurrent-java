@@ -19,6 +19,7 @@
         <module>cj-rxjava</module>
         <module>akka-baeldung</module>
         <module>akka-lightbend</module>
+        <module>akka-alex</module>
     </modules>
 
 </project>
