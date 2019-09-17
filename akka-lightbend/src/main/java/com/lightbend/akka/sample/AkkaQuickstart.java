@@ -11,18 +11,12 @@ public class AkkaQuickstart {
     public static void main(String[] args) {
         final ActorSystem system = ActorSystem.create("helloakka");
         try {
-            //#create-actors
-            final ActorRef printerActor =
-                    system.actorOf(Printer.props(), "printerActor");
-            final ActorRef howdyGreeter =
-                    system.actorOf(Greeter.props("Howdy", printerActor), "howdyGreeter");
-            final ActorRef helloGreeter =
-                    system.actorOf(Greeter.props("Hello", printerActor), "helloGreeter");
-            final ActorRef goodDayGreeter =
-                    system.actorOf(Greeter.props("Good day", printerActor), "goodDayGreeter");
-            //#create-actors
 
-            //#main-send-messages
+            final ActorRef printerActor = system.actorOf(Printer.props(), "printerActor");
+            final ActorRef howdyGreeter = system.actorOf(Greeter.props("Howdy", printerActor), "howdyGreeter");
+            final ActorRef helloGreeter = system.actorOf(Greeter.props("Hello", printerActor), "helloGreeter");
+            final ActorRef goodDayGreeter = system.actorOf(Greeter.props("Good day", printerActor), "goodDayGreeter");
+
             howdyGreeter.tell(new WhoToGreet("Akka"), ActorRef.noSender());
             howdyGreeter.tell(new Greet(), ActorRef.noSender());
 
@@ -34,7 +28,6 @@ public class AkkaQuickstart {
 
             goodDayGreeter.tell(new WhoToGreet("Play"), ActorRef.noSender());
             goodDayGreeter.tell(new Greet(), ActorRef.noSender());
-            //#main-send-messages
 
             System.out.println(">>> Press ENTER to exit <<<");
             System.in.read();

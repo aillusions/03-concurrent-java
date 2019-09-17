@@ -5,14 +5,12 @@ import akka.actor.ActorRef;
 import akka.actor.Props;
 import com.lightbend.akka.sample.Printer.Greeting;
 
-//#greeter-messages
 public class Greeter extends AbstractActor {
-    //#greeter-messages
+
     static public Props props(String message, ActorRef printerActor) {
         return Props.create(Greeter.class, () -> new Greeter(message, printerActor));
     }
 
-    //#greeter-messages
     static public class WhoToGreet {
         public final String who;
 
@@ -25,7 +23,6 @@ public class Greeter extends AbstractActor {
         public Greet() {
         }
     }
-    //#greeter-messages
 
     private final String message;
     private final ActorRef printerActor;
@@ -43,12 +40,8 @@ public class Greeter extends AbstractActor {
                     this.greeting = message + ", " + wtg.who;
                 })
                 .match(Greet.class, x -> {
-                    //#greeter-send-message
                     printerActor.tell(new Greeting(greeting), getSelf());
-                    //#greeter-send-message
                 })
                 .build();
     }
-//#greeter-messages
 }
-//#greeter-messages
