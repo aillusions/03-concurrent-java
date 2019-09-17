@@ -3,8 +3,10 @@ package com.zalizniak.cjakka;
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.Props;
+import akka.pattern.PatternsCS;
 import akka.testkit.TestKit;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import scala.concurrent.duration.Duration;
@@ -13,10 +15,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-
-import static akka.pattern.PatternsCS.ask;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 public class AkkaActorsUnitTest {
 
@@ -49,11 +47,10 @@ public class AkkaActorsUnitTest {
         final TestKit probe = new TestKit(system);
         ActorRef wordCounterActorRef = probe.childActorOf(Props.create(WordCounterActor.class));
 
-        CompletableFuture<Object> future =
-                ask(wordCounterActorRef, new WordCounterActor.CountWords("this is a text"), 1000).toCompletableFuture();
+        CompletableFuture<Object> future = PatternsCS.ask(wordCounterActorRef, new WordCounterActor.CountWords("this is a text"), 1000).toCompletableFuture();
 
-        Integer numberOfWords = (Integer) future.get();
-        assertTrue("The actor should count 4 words", 4 == numberOfWords);
+        int numberOfWords = (Integer) future.get();
+        Assert.assertEquals("The actor should count 4 words", 4, numberOfWords);
     }
 
     @Test
@@ -61,28 +58,26 @@ public class AkkaActorsUnitTest {
         final TestKit probe = new TestKit(system);
         ActorRef wordCounterActorRef = probe.childActorOf(Props.create(WordCounterActor.class));
 
-        CompletableFuture<Object> future =
-                ask(wordCounterActorRef, new WordCounterActor.CountWords(null), 1000).toCompletableFuture();
+        CompletableFuture<Object> future = PatternsCS.ask(wordCounterActorRef, new WordCounterActor.CountWords(null), 1000).toCompletableFuture();
 
         try {
             future.get(1000, TimeUnit.MILLISECONDS);
         } catch (ExecutionException e) {
-            assertTrue("Invalid error message", e.getMessage().contains("The text to process can't be null!"));
+            Assert.assertTrue("Invalid error message", e.getMessage().contains("The text to process can't be null!"));
         } catch (InterruptedException | TimeoutException e) {
-            fail("Actor should respond with an exception instead of timing out !");
+            Assert.fail("Actor should respond with an exception instead of timing out !");
         }
     }
 
     @Test
     public void givenAnAkkaSystem_countTheWordsInAText() {
-        ActorSystem system = ActorSystem.create("test-system");
         ActorRef myActorRef = system.actorOf(Props.create(MyActor.class), "my-actor");
         myActorRef.tell("printit", null);
 //        system.stop(myActorRef);
 //        myActorRef.tell(PoisonPill.getInstance(), ActorRef.noSender());
 //        myActorRef.tell(Kill.getInstance(), ActorRef.noSender());
 
-        ActorRef readingActorRef = system.actorOf(ReadingActor.props(TEXT), "readingActor");
+        ActorRef readingActorRef = system.actorOf(Props.create(ReadingActor.class, TEXT), "readingActor");
         readingActorRef.tell(new ReadingActor.ReadLines(), ActorRef.noSender());    //ActorRef.noSender() means the sender ref is akka://test-system/deadLetters
 
 //        Future<Terminated> terminateResponse = system.terminate();

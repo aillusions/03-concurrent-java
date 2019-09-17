@@ -19,10 +19,6 @@ public class ReadingActor extends AbstractActor {
         this.text = text;
     }
 
-    public static Props props(String text) {
-        return Props.create(ReadingActor.class, text);
-    }
-
     public static final class ReadLines {
     }
 
