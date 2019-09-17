@@ -17,7 +17,8 @@
         <module>cj-reactor</module>
         <module>cj-future</module>
         <module>cj-rxjava</module>
-        <module>cj-akka</module>
+        <module>akka-baeldung</module>
+        <module>akka-lightbend</module>
     </modules>
 
 </project>
