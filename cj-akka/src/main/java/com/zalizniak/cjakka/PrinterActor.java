@@ -3,12 +3,8 @@ package com.zalizniak.cjakka;
 
 import akka.actor.AbstractActor;
 import akka.actor.Props;
-import akka.event.Logging;
-import akka.event.LoggingAdapter;
 
 public class PrinterActor extends AbstractActor {
-
-    private final LoggingAdapter log = Logging.getLogger(getContext().getSystem(), this);
 
     public static Props props(String text) {
         return Props.create(PrinterActor.class, text);
@@ -24,12 +20,12 @@ public class PrinterActor extends AbstractActor {
 
     @Override
     public void preStart() {
-        log.info("Starting PrinterActor {}", this);
+        System.out.println("Starting PrinterActor " + this);
     }
 
     @Override
     public void postStop() {
-        log.info("Stopping PrinterActor {}", this);
+        System.out.println("Stopping PrinterActor " + this);
     }
 
 
@@ -38,8 +34,8 @@ public class PrinterActor extends AbstractActor {
         return receiveBuilder()
                 .match(PrinterActor.PrintFinalResult.class,
                         r -> {
-                            log.info("Received PrintFinalResult message from " + getSender());
-                            log.info("The text has a total number of {} words", r.totalNumberOfWords);
+                            System.out.println("Received PrintFinalResult message from " + getSender());
+                            System.out.println("The text has a total number of " + r.totalNumberOfWords + " words");
                         })
                 .build();
     }

@@ -2,12 +2,8 @@ package com.zalizniak.cjakka;
 
 import akka.actor.AbstractActor;
 import akka.actor.Props;
-import akka.event.Logging;
-import akka.event.LoggingAdapter;
 
 public class FirstActor extends AbstractActor {
-
-    private final LoggingAdapter log = Logging.getLogger(getContext().getSystem(), this);
 
     public static Props props() {
         return Props.create(FirstActor.class);
@@ -15,12 +11,12 @@ public class FirstActor extends AbstractActor {
 
     @Override
     public void preStart() {
-        log.info("Actor started");
+        System.out.println("Actor started");
     }
 
     @Override
     public void postStop() {
-        log.info("Actor stopped");
+        System.out.println("Actor stopped");
     }
 
     // Messages will not be handled

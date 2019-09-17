@@ -1,16 +1,12 @@
 package com.zalizniak.cjakka;
 
 import akka.actor.AbstractActor;
-import akka.event.Logging;
-import akka.event.LoggingAdapter;
 
 public class MyActor extends AbstractActor {
 
-    private final LoggingAdapter log = Logging.getLogger(getContext().getSystem(), this);
-
     @Override
     public void postStop() {
-        log.info("Stopping actor {}", this);
+        System.out.println("Stopping actor this");
     }
 
     public Receive createReceive() {

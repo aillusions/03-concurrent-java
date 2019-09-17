@@ -4,8 +4,6 @@ package com.zalizniak.cjakka;
 import akka.actor.AbstractActor;
 import akka.actor.ActorRef;
 import akka.actor.Props;
-import akka.event.Logging;
-import akka.event.LoggingAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +12,6 @@ import java.util.concurrent.CompletableFuture;
 import static akka.pattern.PatternsCS.ask;
 
 public class ReadingActor extends AbstractActor {
-
-    private final LoggingAdapter log = Logging.getLogger(getContext().getSystem(), this);
 
     private String text;
 
@@ -32,12 +28,12 @@ public class ReadingActor extends AbstractActor {
 
     @Override
     public void preStart() {
-        log.info("Starting ReadingActor {}", this);
+        System.out.println("Starting ReadingActor " + this);
     }
 
     @Override
     public void postStop() {
-        log.info("Stopping ReadingActor {}", this);
+        System.out.println("Stopping ReadingActor " + this);
     }
 
     @Override
@@ -45,7 +41,7 @@ public class ReadingActor extends AbstractActor {
         return receiveBuilder()
                 .match(ReadLines.class, r -> {
 
-                    log.info("Received ReadLines message from " + getSender());
+                    System.out.println("Received ReadLines message from " + getSender());
 
                     String[] lines = text.split("\n");
                     List<CompletableFuture> futures = new ArrayList<>();
