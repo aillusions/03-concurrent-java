@@ -12,7 +12,10 @@ public class Main {
         final ActorRef actor1 = system.actorOf(TestActor1.props(), "actor1");
         final ActorRef actor2 = system.actorOf(TestActor2.props(), "actor2");
 
-        actor1.tell("on_msg", ActorRef.noSender());
-        actor2.tell("on_msg", ActorRef.noSender());
+        System.out.println("actor1.path " + actor1.path());
+        System.out.println("actor2.path " + actor2.path());
+
+        actor1.tell(1, ActorRef.noSender());
+        //actor2.tell("on_msg", ActorRef.noSender());
     }
 }
