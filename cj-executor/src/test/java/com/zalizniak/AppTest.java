@@ -49,6 +49,8 @@ public class AppTest {
                 }
             });
         }
+
+        executorService.shutdown();
     }
 
     @Test
@@ -56,9 +58,41 @@ public class AppTest {
         ExecutorService executorService = Executors.newFixedThreadPool(1);
 
         Future<String> future = executorService.submit(() -> {
+            Thread.sleep(100);
             return "123";
         });
 
+        future.cancel(true);
         System.out.println("" + future.get());
+
+        executorService.shutdown();
+    }
+
+    @Test
+    public void raceCondition() throws ExecutionException, InterruptedException {
+        ExecutorService executorService = Executors.newFixedThreadPool(10);
+
+        Counter counter = new Counter();
+
+        for(int i = 0; i < 1000; i++) {
+            executorService.submit(() -> counter.increment());
+        }
+
+        executorService.shutdown();
+        executorService.awaitTermination(60, TimeUnit.SECONDS);
+
+        System.out.println("Final count is : " + counter.getCount());
+    }
+
+    private static class Counter {
+        int count = 0;
+
+        public void increment() {
+            count = count + 1;
+        }
+
+        public int getCount() {
+            return count;
+        }
     }
 }
