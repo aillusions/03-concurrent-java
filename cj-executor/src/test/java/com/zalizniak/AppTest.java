@@ -2,9 +2,7 @@ package com.zalizniak;
 
 import org.junit.Test;
 
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 
 
 public class AppTest {
@@ -51,7 +49,16 @@ public class AppTest {
                 }
             });
         }
-
     }
 
+    @Test
+    public void shouldEnqueueCallable() throws ExecutionException, InterruptedException {
+        ExecutorService executorService = Executors.newFixedThreadPool(1);
+
+        Future<String> future = executorService.submit(() -> {
+            return "123";
+        });
+
+        System.out.println("" + future.get());
+    }
 }
