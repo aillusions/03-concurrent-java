@@ -10,10 +10,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 public class CjRxjavaApplicationTests {
 
-	@Test
-	public void contextLoads() {
+    @Test
+    public void contextLoads() {
 
-		Flowable.just("Hello world").subscribe(System.out::println);
-	}
+        Flowable.just("Hello world").subscribe(System.out::println);
+    }
 
 }
