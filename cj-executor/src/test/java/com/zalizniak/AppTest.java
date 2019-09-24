@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.*;
 
@@ -88,13 +89,15 @@ public class AppTest {
     }
 
     @Test
-    public void forkJoin() {
-        MyNode node1 = new MyNode(1L);
-        MyNode node2 = new MyNode(2L);
+    public void forkJoin() throws InterruptedException {
+        Node node1 = new Node(1L);
+        Node node2 = new Node(2L);
 
-        MyNode root = new MyNode(3L, node1, node2);
+        Node root = new Node(3L, node1, node2);
 
-        new ForkJoinPool().invoke(new ValueSumCounter(root));
+        System.out.println("Tree sum: " + new ForkJoinPool().invoke(new ValueSumCounter(root)));
+
+        Thread.sleep(1000);
     }
 
     private static class Counter {
@@ -118,34 +121,42 @@ public class AppTest {
 
         @Override
         protected Long compute() {
-            return null;
+            long sum = node.getValue();
+
+            List<ValueSumCounter> subTasks = new LinkedList<>();
+
+            for (Node child : node.getChildren()) {
+                ValueSumCounter task = new ValueSumCounter(child);
+                task.fork(); // запустим асинхронно
+                System.out.println("Forked");
+                subTasks.add(task);
+            }
+
+            for (ValueSumCounter task : subTasks) {
+                sum += task.join(); // дождёмся выполнения задачи и прибавим результат
+                System.out.println("Joined");
+            }
+
+            return sum;
         }
     }
 
-    public static interface Node {
-        Collection<Node> getChildren();
-
-        long getValue();
-    }
-
-    public static class MyNode implements Node {
+    public static class Node {
 
         private List<Node> children;
         private Long value;
 
-        public MyNode(Long value, Node... children) {
+        public Node(Long value, Node... children) {
             this.children = Arrays.asList(children);
             this.value = value;
         }
 
-        @Override
         public Collection<Node> getChildren() {
-            return null;
+            return children;
         }
 
-        @Override
         public long getValue() {
-            return 0;
+            return value;
         }
     }
 }
