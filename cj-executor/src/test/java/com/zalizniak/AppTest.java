@@ -10,7 +10,7 @@ import java.util.concurrent.Executors;
 public class AppTest {
 
     @Test
-    public void should1() {
+    public void shouldExecute1Task() {
         ExecutorService executorService = Executors.newSingleThreadExecutor();
         executorService.submit(() -> {
             System.out.println("I'm from thread: " + Thread.currentThread().getName());
@@ -21,7 +21,7 @@ public class AppTest {
     }
 
     @Test
-    public void should2() throws InterruptedException {
+    public void shouldExecuteMultipleTasks() throws InterruptedException {
         ExecutorService executorService = Executors.newFixedThreadPool(3);
         CountDownLatch countDownLatch = new CountDownLatch(8);
         Runnable task = () -> {
@@ -36,6 +36,22 @@ public class AppTest {
         countDownLatch.await();
 
         executorService.shutdown();
+    }
+
+    @Test
+    public void shouldEnqueueTooMany() throws InterruptedException {
+        ExecutorService executorService = Executors.newFixedThreadPool(1);
+
+        for (int i = 0; i < 10_000_000; i++) {
+            executorService.submit(() -> {
+                try {
+                    Thread.sleep(100_000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            });
+        }
+
     }
 
 }
