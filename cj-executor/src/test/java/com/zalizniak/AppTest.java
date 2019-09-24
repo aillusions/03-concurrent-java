@@ -2,6 +2,9 @@ package com.zalizniak;
 
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.*;
 
 
@@ -74,7 +77,7 @@ public class AppTest {
 
         Counter counter = new Counter();
 
-        for(int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 1000; i++) {
             executorService.submit(() -> counter.increment());
         }
 
@@ -82,6 +85,16 @@ public class AppTest {
         executorService.awaitTermination(60, TimeUnit.SECONDS);
 
         System.out.println("Final count is : " + counter.getCount());
+    }
+
+    @Test
+    public void forkJoin() {
+        MyNode node1 = new MyNode(1L);
+        MyNode node2 = new MyNode(2L);
+
+        MyNode root = new MyNode(3L, node1, node2);
+
+        new ForkJoinPool().invoke(new ValueSumCounter(root));
     }
 
     private static class Counter {
@@ -93,6 +106,46 @@ public class AppTest {
 
         public int getCount() {
             return count;
+        }
+    }
+
+    public class ValueSumCounter extends RecursiveTask<Long> {
+        private final Node node;
+
+        public ValueSumCounter(Node node) {
+            this.node = node;
+        }
+
+        @Override
+        protected Long compute() {
+            return null;
+        }
+    }
+
+    public static interface Node {
+        Collection<Node> getChildren();
+
+        long getValue();
+    }
+
+    public static class MyNode implements Node {
+
+        private List<Node> children;
+        private Long value;
+
+        public MyNode(Long value, Node... children) {
+            this.children = Arrays.asList(children);
+            this.value = value;
+        }
+
+        @Override
+        public Collection<Node> getChildren() {
+            return null;
+        }
+
+        @Override
+        public long getValue() {
+            return 0;
         }
     }
 }
