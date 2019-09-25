@@ -95,7 +95,7 @@ public class AppTest {
 
         Node root = new Node(3L, node1, node2);
 
-        System.out.println("Tree sum: " + new ForkJoinPool().invoke(new ValueSumCounter(root)));
+        System.out.println("Tree sum: " + /*new ForkJoinPool()*/ForkJoinPool.commonPool().invoke(new ValueSumCounter(root)));
 
         Thread.sleep(1000);
     }
